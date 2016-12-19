@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="db.ShouHuanDao">
+
+	<resultMap type="pojo.TiWen" id="tiWen">
+	  <id column="id" property="id" />
+	  <result column="tiWen" property="tiWen" />
+	  <result column="createTime" property="createTime" />
+	</resultMap>
+	
+	<resultMap type="pojo.XinTiao" id="xinTiao">
+	  <id column="id" property="id" />
+	  <result column="xinTiao" property="xinTiao" />
+	   <result column="createTime" property="createTime" />
+	</resultMap>
+	
+	<resultMap type="pojo.UserInfo" id="userInfo">
+	  <id column="id" property="id" />
+ 	  <result column="mobile" property="mobile" />
+	  <result column="pwd" property="pwd" />
+	    <result column="role" property="role" />
+	  <result column="createTime" property="createTime" />
+	</resultMap>
+	
+	<resultMap type="pojo.UserJianCeTime" id="userJianCeTime">
+	  <id column="mobile" property="mobile"/>
+	  <result column="jianCeTime" property="jianCeTime" />
+	</resultMap>
+	
+	<resultMap type="pojo.ZiXunInfo" id="ziXunInfo">
+	  <result column="mobile" property="mobile" />
+	  <result column="imgUrl" property="imgUrl" />
+	  <result column="thream" property="thream" />
+	  <result column="content" property="content" />
+	  <result column="createTime" property="createTime" />
+	</resultMap>
+	
+	<resultMap type="pojo.UserJianCeData" id="userJianCeData">
+	  <result column="id" property="id" />
+	  <result column="mobile" property="mobile" />
+	  <result column="tiWen" property="tiWen" />
+	  <result column="xinTiao" property="xinTiao" />
+	  <result column="createTime" property="createTime" />
+	</resultMap>
+	
+	<insert id="insertUserJianCeData" parameterType="pojo.UserJianCeData">
+	   insert into userJianCeData (mobile,tiWen,xinTiao,createTime) value(#{mobile},#{tiWen},#{xinTiao},now())
+	</insert>
+	
+	<select id="selectUserJianCeData" resultMap="userJianCeData" parameterType="HashMap">
+		select * from userJianCeData where 1=1
+		<if test="#{mobile}"> AND mobile=#{mobile,jdbcType=VARCHAR}</if>
+		<if test="#{start}"> limit #{start}</if>
+		<if test="#{end}"> ,#{end}</if>
+	</select>
+	
+	<insert id="insertUserInfo" parameterType="pojo.UserInfo">
+	   insert into userInfo (mobile,pwd,createTime) value(#{mobile},#{pwd},now())
+	</insert>
+	
+	<select id="selectUserInfo" resultMap="userInfo" parameterType="string">
+		select * from userInfo where mobile=#{mobile}
+	</select>
+	
+	<select id="selectUserJianCe" resultMap="userJianCeTime" parameterType="string">
+		select * from userJianCeTime where mobile=#{mobile}
+	</select>
+	
+	<insert id="insertUserJianCe" parameterType="string">
+	   insert into userJianCeTime (mobile,jianCeTime) value(#{mobile},now())
+	</insert>
+	
+	<update id="updateUserJianCe" parameterType="string" >
+	   update userJianCeTime set jianCeTime = now() where mobile = #{mobile}
+ 	</update>
+	
+	<select id="selectTiWen" resultType="pojo.TiWen">
+		select * from tiWen order by createTime desc limit 0,1
+	</select>
+	
+	<insert id="insertTiWen" parameterType="pojo.TiWen">
+		insert into tiWen(tiWen,createTime) value (#{tiWen},now())
+	</insert>
+	
+	<select id="listXinTiao" resultMap="xinTiao" parameterType="string">
+		select * from xinTiao where createTime >  (select jianCeTime from userJianCeTime where mobile=#{mobile})
+	</select>
+	
+	<insert id="insertXinTiao" parameterType="pojo.TiWen">
+		insert into xinTiao(xinTiao,createTime) value (#{xinTiao},now())
+	</insert>
+	
+	<select id="listZixunByMobile" resultMap="ziXunInfo" parameterType="string">
+		select * from ziXunInfo where mobile=#{mobile}
+	</select>
+	
+	
+	<select id="testMapObject" resultType="HashMap" >
+		select * from ziXunInfo
+	</select>
+	
+</mapper>
