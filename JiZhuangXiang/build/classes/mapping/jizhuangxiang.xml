@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="db.JiZhuangXiangDao">
+
+	<!-- <insert id="insertWenShiDu" parameterType="pojo.WenShiDu">
+	   insert into wenShiDu (wenDu,shiDu,createTime) value(#{wenDu},#{shiDu},now())
+	</insert> -->
+	
+	<select id="selectWenShiDu"  resultType="pojo.WenShiDu">
+		select * from wenShiDu order by createTime desc limit 0,1
+	</select>
+	
+	<!-- <insert id="insertGuangDu" parameterType="pojo.GuangDu">
+	   insert into guangDu (guangDu,createTime) value(#{guangDu},now())
+	</insert> -->
+	
+	<select id="selectGuangDu"  resultType="pojo.GuangDu">
+		select * from guangDu order by createTime desc limit 0,1
+	</select>
+	
+	<select id="selectDescStatus"  resultType="pojo.DescStatus">
+		select * from descStatus
+	</select>
+	
+	<update id="updateDescStatus" parameterType="pojo.DescStatus">
+		update descStatus
+		set status=#{status}
+		where descName=#{descName}	
+	</update>
+	
+	<update id="updateInitDesc" >
+	   update descStatus
+       set status=0
+       where 1=1
+	</update>
+	
+	<insert id="insertUserInfo" parameterType="pojo.UserInfo">
+	   insert into userInfo (mobile,pwd,createTime) value(#{mobile},#{pwd},now())
+	</insert>
+	
+	<select id="selectUserInfo" resultType="pojo.UserInfo" parameterType="string">
+		select * from userInfo where mobile=#{mobile}
+	</select>
+	
+	<update id="updateLinJieWenDu" parameterType="int">
+	   update linJieWenDu 
+	   set linJieWenDu=#{wenDu},createTime=now()
+	   where 1 =1 
+	</update>
+	
+	<select id="selectLinJieWenDu" resultType="pojo.LinJieWenDu">
+		select * from linJieWenDu
+	</select>
+	
+</mapper>
